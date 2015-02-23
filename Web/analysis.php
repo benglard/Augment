@@ -76,28 +76,28 @@ class analysis {
     	$type = "url";
     	
     	if (! self::$is_url) {
-    		$type = "video";
-    		$uploadFile = self::$paths[0];
-    		$bucketName = "project-augment";
+            $type = "video";
+            $uploadFile = self::$paths[0];
+            $bucketName = "project-augment";
 
-    		// Check if our upload file exists
-    		if (!file_exists($uploadFile) || !is_file($uploadFile))
+            // Check if our upload file exists
+            if (!file_exists($uploadFile) || !is_file($uploadFile))
                 exit("\nERROR: No such file: $uploadFile\n\n");
 
-    		// Check for CURL
-    		if (!extension_loaded('curl') && !@dl(PHP_SHLIB_SUFFIX == 'so' ? 'curl.so' : 'php_curl.dll'))
+            // Check for CURL
+            if (!extension_loaded('curl') && !@dl(PHP_SHLIB_SUFFIX == 'so' ? 'curl.so' : 'php_curl.dll'))
                 exit("\nERROR: CURL extension not loaded\n\n");
 
-    		// Instantiate the class
-    		$s3 = new S3(self::$AWS_AKEY, self::$AWS_SKEY);
+            // Instantiate the class
+            $s3 = new S3(self::$AWS_AKEY, self::$AWS_SKEY);
 
-    		// Put our file (also with public read access)
-    		$s3->putObjectFile($uploadFile, $bucketName, baseName($uploadFile), S3::ACL_PUBLIC_READ)
+            // Put our file (also with public read access)
+            $s3->putObjectFile($uploadFile, $bucketName, baseName($uploadFile), S3::ACL_PUBLIC_READ)
     	}
 
     	$insert = "INSERT INTO augment (phash, type, url) VALUES (\"$phash\", \"$type\", \"self::$url\")";
     	return self::query($insert);
-    	}
+    }
 
     private static function phash($img) {
     	$w = imagesx($img);
