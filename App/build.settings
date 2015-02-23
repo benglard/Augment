@@ -1,0 +1,21 @@
+settings = {
+	
+	orientation = {
+		default = "portrait",
+		supported = { "portrait", }
+	},
+	
+	iphone = {
+		plist = {
+			UIStatusBarHidden = false,
+			UIPrerenderedIcon = true, -- set to false for "shine" overlay
+		}
+	},
+	
+	androidPermissions = {
+  		"android.permission.INTERNET",
+  		"android.permission.WRITE_EXTERNAL_STORAGE",
+  		"android.permission.CAMERA",
+  	},
+
+}
