@@ -27,18 +27,20 @@ class analysis {
     	self::$paths = $_SESSION['paths'];
 
     	$pic_path = "";
-    	if (self::$is_url)
-    		$pic_path = self::$paths[0];
-    	else
-    		$pic_path = self::$paths[1];
+    	if (self::$is_url) {
+            $pic_path = self::$paths[0];
+    	} else {
+    	   $pic_path = self::$paths[1];
+        }
     	self::$pic_path = $pic_path;
 
     	self::$url = $_SESSION['url'];
     }
 
     public static function testConnection($getArray) {
-        if ($getArray["test"] != "vjwosydhewkdlheubuozc")
+        if ($getArray["test"] != "vjwosydhewkdlheubuozc") {
             return False;
+        }
         return self::connect();
     }
 
@@ -46,10 +48,11 @@ class analysis {
         if (self::connect()) {
             $resource = mysqli_query(self::$link, $str);
             echo mysqli_error(self::$link);
-            if ($resource) 
+            if ($resource) {
                 return $resource;
-            else 
+            } else {
                 return False;
+            }
         }
         return False;
     }
@@ -79,11 +82,11 @@ class analysis {
 
     		// Check if our upload file exists
     		if (!file_exists($uploadFile) || !is_file($uploadFile))
-    			exit("\nERROR: No such file: $uploadFile\n\n");
+                exit("\nERROR: No such file: $uploadFile\n\n");
 
     		// Check for CURL
     		if (!extension_loaded('curl') && !@dl(PHP_SHLIB_SUFFIX == 'so' ? 'curl.so' : 'php_curl.dll'))
-    			exit("\nERROR: CURL extension not loaded\n\n");
+                exit("\nERROR: CURL extension not loaded\n\n");
 
     		// Instantiate the class
     		$s3 = new S3(self::$AWS_AKEY, self::$AWS_SKEY);
@@ -101,8 +104,8 @@ class analysis {
         $h = imagesy($img);
         $r = $g = $b = 0;
         $pixels = array();
-        for($y = 0; $y < $h; $y++) {
-            for($x = 0; $x < $w; $x++) {
+        for ($y = 0; $y < $h; $y++) {
+            for ($x = 0; $x < $w; $x++) {
                 $rgb = imagecolorat($img, $x, $y);
                 $r = $rgb >> 16;
                 $g = $rgb >> 8 & 255;
@@ -117,15 +120,12 @@ class analysis {
         $hash = array();
         $index = 0;
         foreach($pixels as $px){
-    		if ($px > $avg)
-    			$hash[$index] = 1;
-    		else
-    			$hash[$index] = 0;
+    		if ($px > $avg) { $hash[$index] = 1; }
+    		else { $hash[$index] = 0; }
     		$index += 1;
     	}
 
-    	for($c = 1; $c <= 3; $c += 1)
-    		$hash = self::shorten($hash);
+    	for ($c = 1; $c <= 3; $c += 1) { $hash = self::shorten($hash); }
 
     	return $hash;
     }
@@ -137,21 +137,21 @@ class analysis {
     private static function shorten($hash) {
     	$folded = array();
     	$size = count($hash);
-    	for($i = 0; $i < $size/2; $i += 1) {
-    		$one = $hash[$i];
-    		$two = $hash[$size - $i - 1];
-    		$folded[$i] = ($one + $two) / 2;
+    	for ($i = 0; $i < $size/2; $i += 1) {
+            $one = $hash[$i];
+            $two = $hash[$size - $i - 1];
+            $folded[$i] = ($one + $two) / 2;
     	}
     	return $folded
     }
 
     private static function compare($hash1, $hash2, $precision = 1) {
-    	$similarity = strlen($hash1);
-    	for ($i=0; $i < strlen($hash1); $i += 1)
-    		if ($hash1[$i] != $hash2[$i])
-    			$similarity -= 1;
-    	$percentage = round(($similarity/strlen($hash1)*100), $precision);
-    	return $percentage;
+        $similarity = strlen($hash1);
+        for ($i=0; $i < strlen($hash1); $i += 1)
+            if ($hash1[$i] != $hash2[$i])
+                $similarity -= 1;
+        $percentage = round(($similarity/strlen($hash1)*100), $precision);
+        return $percentage;
     }
         
 }
